@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 const urlSchema = new mongoose.Schema({
+    title:{
+        type: String
+    },
     shortUrl: {
         type: String,
         required: true
@@ -8,7 +11,9 @@ const urlSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    visitHistory: [{ timestamp: { type: Number } }]
+    owner:{
+        type:mongoose.Types.ObjectId
+    }
 }, {
     timestamps: true
 });

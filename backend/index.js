@@ -3,6 +3,10 @@ import cors from "cors";
 import userRoutes from "./routes/userRoutes.js";
 import urlRoutes from "./routes/urlRoutes.js";
 import connectDB from "./config/connectDB.js";
+import urlModel from "./models/urlModel.js";
+import userModel from "./models/userModel.js";
+import tokenValidation from "./middleware/tokenValidation.js";
+import qrcode from "qrcode"
 const app = express();
 connectDB();
 app.use(cors());
@@ -22,7 +26,41 @@ app.get("/", (req, res) => {
 const port = 8000;
 app.use("/api/users", userRoutes);
 app.use("/api/url",urlRoutes);
-
+app.get("/:shortUrl", async (req, res) => {
+  try {
+    const { shortUrl } = req.params;
+    console.log("Received short URL:", shortUrl);  
+    
+    const urlRecord = await urlModel.findOne({ shortUrl });
+    const userRecord = await userModel.findById(urlRecord.owner);
+    const userUrl = await userRecord.urls.find((u) => u.shortUrl === shortUrl);
+    console.log("Found URL record:", urlRecord);  // Log the found URL record
+    // console.log(userRecord);
+    // console.log("found:",userUrl);
+    if (!urlRecord) {
+      return res.status(404).json({ message: "Short URL not found" });
+    }
+    userUrl.visitHistory.push({ timestamp: Date.now() });
+    await urlRecord.save();
+    console.log("Saving the visit");
+    res.redirect(urlRecord.targetUrl);
+  } catch (error) {
+    console.error("Error in redirecting:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+app.post("/qr",tokenValidation,(req,res)=>{
+  const link = req.body.url;
+  qrcode.toDataURL(link,(err,src)=>{
+    if(err){
+      console.log(err);
+      res.send("Error generating QR Code");
+    }
+    const user = req.user;
+    console.log(user);
+    res.send(src);
+  })
+})
 app.listen(port,()=>{
     console.log("Server running at port "+port);
 })

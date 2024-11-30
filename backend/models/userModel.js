@@ -9,10 +9,26 @@ const urlSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    title:{
+        type: String
+    },
+    visitHistory: {
+        type: [Date],
+        default: []
+    }
 }, {
     timestamps: true
 });
-
+const qrSchema = new mongoose.Schema({
+    qrCode: {
+        type: String,
+        required: true
+    },
+    targetUrl: {
+        type: String,
+        required: true
+    },
+})
 const userSchema = new mongoose.Schema({
     uname: {
         type: String,
@@ -29,6 +45,10 @@ const userSchema = new mongoose.Schema({
     },
     urls: {
         type: [urlSchema],
+        default: []
+    },
+    qrCodes: {
+        type: [qrSchema],
         default: []
     }
 }, {
