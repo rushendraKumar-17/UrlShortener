@@ -1,52 +1,116 @@
-import React from "react";
-import { Box, List, ListItem, ListItemIcon, ListItemText, Drawer, Typography } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import LinkIcon from "@mui/icons-material/Link";
-import QrCodeIcon from "@mui/icons-material/QrCode";
-import { useNavigate } from "react-router-dom";
-
+import React from 'react';
+import { useContext,useEffect } from 'react';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import HomeIcon from '@mui/icons-material/Home';
+import LinkIcon from '@mui/icons-material/Link';
+import QrCodeIcon from '@mui/icons-material/QrCode';
+import Typography from '@mui/material/Typography';
+import {useState} from "react";
+import NewQr from "./NewQr.jsx";
+import Qrcodes from './Qrcodes';
+import Allurls from './Allurls';
+import AppContext from '../Context/context.jsx';
+import Landing from "./Info.jsx";
+// import CreateNew from "./CreateNew.jsx";
+import NewUrl from "./NewUrl.jsx";
 const Sidebar = () => {
-  const navigate = useNavigate();
-
-  const menuItems = [
-    { text: "Home", icon: <HomeIcon />, path: "/home/new" },
-    { text: "URLs", icon: <LinkIcon />, path: "/home/urls" },
-    { text: "QR Codes", icon: <QrCodeIcon />, path: "/home/qrcodes" },
-  ];
-
+  const drawerWidth = 240;
+  const {user} = useContext(AppContext);
+  useEffect(()=>{
+    console.log(user);
+  })
+  const [selected,setSelected] = useState("");
   return (
-    <Drawer
-      variant="permanent"
-      anchor="left"
-      sx={{
-        width: 240,
-        flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          width: 240,
-          boxSizing: "border-box",
-          backgroundColor: "#f5f5f5",
-        },
-      }}
-    >
-     
-      <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}  >
-        <Box sx={{ padding: 2, textAlign: "center" }}>
-          <Typography variant="h6">My App</Typography>
+    <Box sx={{ display: 'flex' }}>
+      {/* Sidebar Drawer */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '64px',
+            bgcolor: 'white',
+            color: 'black',
+          }}
+        >
+          <Typography variant="h6">Shortify</Typography>
         </Box>
         <List>
-          {menuItems.map((item) => (
-            <ListItem
-              button
-              key={item.text}
-              onClick={() => navigate(item.path)}
-            >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          ))}
+        <ListItem disablePadding style={{backgroundColor:"blue",color:"white",width:"15vw",borderRadius:"2vw"}}>
+            <ListItemButton onClick={()=>{
+              setSelected("new");
+            }}>
+              <ListItemText primary="+"/>
+
+              <ListItemText primary="Create new" />
+            </ListItemButton>
+          </ListItem>
+          {/* Home */}
+          <ListItem disablePadding>
+            <ListItemButton onClick={()=>{
+              setSelected("home");
+            }}>
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Home" />
+            </ListItemButton>
+          </ListItem>
+
+          {/* Urls */}
+          <ListItem disablePadding>
+            <ListItemButton onClick={()=>{
+              setSelected("urls");
+            }}>
+              <ListItemIcon>
+                <LinkIcon />
+              </ListItemIcon>
+              <ListItemText primary="Urls" />
+            </ListItemButton>
+          </ListItem>
+
+          {/* QR Codes */}
+          <ListItem disablePadding>
+            <ListItemButton onClick={()=>{
+              setSelected("qrcodes");
+              console.log("qrcodes");
+            }}>
+              <ListItemIcon>
+                <QrCodeIcon />
+              </ListItemIcon>
+              <ListItemText primary="QR Codes" />
+            </ListItemButton>
+          </ListItem>
         </List>
+      </Drawer>
+      {/* Main Content Placeholder */}
+      <Box
+        component="main"
+      >
+
+        {selected === "home" && <Landing />}
+        {selected === "urls" && <Allurls />}
+        {selected === "qrcodes" && <NewQr />}
+        {selected === 'new' && <NewUrl />}
       </Box>
-    </Drawer>
+    </Box>
   );
 };
 
