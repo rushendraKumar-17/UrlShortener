@@ -16,7 +16,7 @@ function App() {
     const token = localStorage.getItem("token");
     if (token) {
       axios
-        .get("http://localhost:8000/api/users", {
+        .get("https://urlshortener-p7ma.onrender.com/api/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

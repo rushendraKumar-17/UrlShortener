@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,Link} from "react-router-dom";
 import axios from "axios";
 import { Container, TextField, Button, Typography, Box } from "@mui/material";
 
@@ -14,7 +14,7 @@ const Signup = () => {
     e.preventDefault();
     if (email && password && name) {
       axios
-        .post("http://localhost:8000/api/users/signup", {
+        .post("https://urlshortener-p7ma.onrender.com/api/users/signup", {
           uname: name,
           email,
           password,
@@ -83,6 +83,8 @@ const Signup = () => {
             Signup
           </Button>
         </form>
+        <br />
+        Already have an account?<Link to="/login">Login</Link>
       </Box>
     </Container>
   );

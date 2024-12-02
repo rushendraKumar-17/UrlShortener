@@ -8,7 +8,7 @@ const token = localStorage.getItem("token");
   const handleGenerateQRCode = async () => {
     if (url) {
       try {
-        axios.post("http://localhost:8000/qr",{url},{
+        axios.post("https://urlshortener-p7ma.onrender.com/qr",{url},{
             headers:{
                 "Content-Type":"application/json",
                 Authorization:`Bearer ${token}`

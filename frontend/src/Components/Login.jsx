@@ -6,7 +6,7 @@ const Login = () => {
     const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:8000/api/users/signin",{email,password}).then(res => {
+    axios.post("https://urlshortener-p7ma.onrender.com/api/users/signin",{email,password}).then(res => {
         if(res.status === 200){
             localStorage.setItem('token',res.data.token);
             navigate("/home");

@@ -12,7 +12,7 @@ const Home = () => {
   const token = localStorage.getItem("token");
   const handleSubmit = (e)=>{
     e.preventDefault();
-    axios.post("http://localhost:8000/api/url",{
+    axios.post("https://urlshortener-p7ma.onrender.com/api/url",{
       url:baseUrl
     },{
       headers:{

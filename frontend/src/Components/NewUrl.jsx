@@ -12,7 +12,7 @@ const NewUrl = () => {
     }
     console.log(data);
     console.log(token);
-    axios.post("http://localhost:8000/api/url",data,{
+    axios.post("https://urlshortener-p7ma.onrender.com/api/url",data,{
       headers:{
       Authorization:`Bearer ${token}`
       }
@@ -20,6 +20,7 @@ const NewUrl = () => {
       if(res.status === 200){
         setUrl("");
         setTitle("");
+        console.log(res.data);
         alert("Your short url is :"+res.data.shortUrl);
       }
     }).catch(e=>console.log(e));
