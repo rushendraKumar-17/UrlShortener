@@ -32,16 +32,16 @@ app.get("/:shortUrl", async (req, res) => {
     console.log("Received short URL:", shortUrl);  
     
     const urlRecord = await urlModel.findOne({ shortUrl });
+    if(!urlRecord){
+      return res.status(404).json({ message: "Short URL not found" });
+    }
     const userRecord = await userModel.findById(urlRecord.owner);
-    const userUrl = await userRecord.urls.find((u) => u.shortUrl === shortUrl);
-    console.log("Found URL record:", urlRecord);  // Log the found URL record
-    // console.log(userRecord);
-    // console.log("found:",userUrl);
+    const userUrl = userRecord.urls.find((u) => u.shortUrl === shortUrl);
     if (!urlRecord) {
       return res.status(404).json({ message: "Short URL not found" });
     }
-    userUrl.visitHistory.push({ timestamp: Date.now() });
-    await urlRecord.save();
+    userUrl.visitHistory.push( Date.now() );
+    await userRecord.save();
     console.log("Saving the visit");
     res.redirect(urlRecord.targetUrl);
   } catch (error) {
