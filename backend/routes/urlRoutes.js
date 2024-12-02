@@ -31,8 +31,8 @@ router.post("/", tokenValidation, async (req, res) => {
       shortUrlTaken = await urlModel.findOne({ shortUrl });
     }
     console.log(shortUrl);
-    user.urls.push({ shortUrl:`https://urlshortener-p7ma.onrender.com/${shortUrl}`, targetUrl: url,title });
-    urlModel.create({ shortUrl:`https://urlshortener-p7ma.onrender.com/${shortUrl}`, targetUrl: url ,title,owner:user._id});
+    user.urls.push({ shortUrl, targetUrl: url,title });
+    urlModel.create({ shortUrl, targetUrl: url ,title,owner:user._id});
     await user.save();
 
     res.status(200).json({ shortUrl:`https://urlshortener-p7ma.onrender.com/${shortUrl}` });
