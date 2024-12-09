@@ -134,7 +134,7 @@ const Allurls = () => {
                       href={url.shortUrl}
                       target="_blank"
                       rel="noopener noreferrer">
-                      {url.shortUrl}
+                      {`https://urlshortener-p7ma.onrender.com/${url.shortUrl}`}
                     </a>
                     &nbsp;
                     <Tooltip

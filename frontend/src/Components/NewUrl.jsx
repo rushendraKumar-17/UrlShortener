@@ -30,7 +30,7 @@ const NewUrl = () => {
           setUrl("");
           setTitle("");
           console.log(res.data);
-          alert("Your short URL is: " + res.data.shortUrl);
+          alert("Your short URL is: " + `https://urlshortener-p7ma.onrender.com/${res.data.shortUrl}`);
         }
       })
       .catch((e) => console.log(e));
