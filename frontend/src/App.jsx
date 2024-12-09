@@ -1,17 +1,14 @@
-/* eslint-disable no-unused-vars */
-import { useEffect, useState,useContext } from "react";
-import Home from "./Components/Home.jsx";
-import Login from "./Components/Login.jsx";
+import { useEffect, useState, useContext } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Login from "./Components/Login.jsx";
 import Signup from "./Components/Signup.jsx";
-import Navbar from "./Components/Navbar.jsx";
-import Sidebar from "./Components/Sidebar.jsx";
+import Home from "./Components/Home.jsx";
 import AppContext from "./Context/context.jsx";
+import Navbar from "./Components/Navbar.jsx";
 function App() {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState(null);
-  const {user,setUser} = useContext(AppContext);
+  const { setUser ,setLogged} = useContext(AppContext);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -22,32 +19,29 @@ function App() {
           },
         })
         .then((res) => {
-          console.log(res);
-          if(res.status === 200){
-            navigate('/home');
+          if (res.status === 200) {
             setUser(res.data);
-            console.log(user);
-          }else{
-            navigate('/login');
-          }
-        }).catch(e => {
-          console.log(e)
-          navigate('/login');
-        
+            setLogged(true);
+          } 
+          navigate("/home");
+        })
+        .catch(() => {
+          navigate("/login");
         });
+    } else {
+      navigate("/home");
     }
-    else{
-      navigate("/login");
-    }
-  },[]);
+  }, []);
 
   return (
     <>
-      <Routes>
-        <Route path='/login' element={<Login/>}/>
-        <Route path='/home' element = {<Home/>}/>
-        <Route path="/signup" element={<Signup/>}/>
-      </Routes>
+    <Navbar />
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/home/*" element={<Home />} /> {/* Nested routes */}
+      
+    </Routes>
     </>
   );
 }

@@ -4,19 +4,22 @@ import { TextField, Button, Box, Typography } from '@mui/material';
 import { useNavigate,Link } from "react-router-dom";
 const Login = () => {
     const navigate = useNavigate();
+    const {setUser,setLogged} = useContext(AppContext);
   const handleSubmit = (e) => {
     e.preventDefault();
     axios.post("https://urlshortener-p7ma.onrender.com/api/users/signin",{email,password}).then(res => {
         if(res.status === 200){
             localStorage.setItem('token',res.data.token);
+            setUser(res.data.user);
+            setLogged(true);
             navigate("/home");
         }else{
             alert("Invalid credentials..");
         }
     }).catch(e => console.log(e));
   };
-  const [email,setEmail] = useState(null);
-  const [password,setPassword] = useState(null);
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("");
   return (
     <Box
       display="flex"

@@ -1,51 +1,112 @@
-import React, { useState } from 'react';
-import QRCode from 'qrcode';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Paper,
+  Stack,
+} from "@mui/material";
+
 const NewQr = () => {
-  const [url, setUrl] = useState('');
-  const [qrCodeImage, setQrCodeImage] = useState('');
-const token = localStorage.getItem("token");
+  const [url, setUrl] = useState("");
+  const [qrCodeImage, setQrCodeImage] = useState("");
+  const token = localStorage.getItem("token");
+  const [title,setTitle] = useState("");
   const handleGenerateQRCode = async () => {
     if (url) {
       try {
-        axios.post("https://urlshortener-p7ma.onrender.com/qr",{url},{
-            headers:{
-                "Content-Type":"application/json",
-                Authorization:`Bearer ${token}`
+        axios
+          .post(
+            "https://urlshortener-p7ma.onrender.com/api/qr",
+            { url,title },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
             }
-        }).then(res=>{
+          )
+          .then((res) => {
             console.log(res);
             setQrCodeImage(res.data);
-
-        }).catch(e =>{
+          })
+          .catch((e) => {
             console.log(e);
-        })
+          });
       } catch (error) {
-        console.error('Error generating QR code:', error);
+        console.error("Error generating QR code:", error);
       }
     }
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>Generate QR Code</h1>
-      <input
-        type="text"
-        placeholder="Enter URL"
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-        style={{ width: '300px', padding: '10px' }}
-      />
-      <button onClick={handleGenerateQRCode} style={{ marginLeft: '10px', padding: '10px' }}>
+    <Box
+      component={Paper}
+      elevation={3}
+      sx={{
+        maxWidth: "500px",
+        margin: "20px auto",
+        padding: "20px",
+        textAlign: "center",
+        borderRadius: "10px",
+      }}
+    >
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{ fontWeight: "bold", marginBottom: "20px" }}
+      >
         Generate QR Code
-      </button>
+      </Typography>
+      <Stack spacing={3}>
+        {/* Input Field */}
+        <TextField
+          label="Enter URL"
+          variant="outlined"
+          fullWidth
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+        />
+        <TextField
+          label="Title(optional)"
+          variant="outlined"
+          fullWidth
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        {/* Generate Button */}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleGenerateQRCode}
+          fullWidth
+          sx={{ padding: "10px", fontWeight: "bold" }}
+        >
+          Generate QR Code
+        </Button>
+      </Stack>
+
       {qrCodeImage && (
-        <div style={{ marginTop: '20px' }}>
-          <h3>QR Code:</h3>
-          <img src={qrCodeImage} alt="QR Code" />
-        </div>
+        <Box sx={{ marginTop: "20px", textAlign: "center" }}>
+          <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+            QR Code:
+          </Typography>
+          <img
+            src={qrCodeImage}
+            alt="QR Code"
+            style={{
+              width: "200px",
+              height: "200px",
+              border: "2px solid #ccc",
+              borderRadius: "10px",
+            }}
+          />
+          
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 
