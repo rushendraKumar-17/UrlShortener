@@ -41,6 +41,12 @@ router.post("/", tokenValidation, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+router.get("/",tokenValidation,async(req,res)=>{
+  const user = await userModel.findOne({email:req.user.email});
+  
+  res.status(200).json({urls:user.urls});
+})
 router.get("/:shortUrl", async (req, res) => {
   try {
     const { shortUrl } = req.params;
@@ -60,6 +66,38 @@ router.get("/:shortUrl", async (req, res) => {
   } catch (error) {
     console.error("Error in redirecting:", error);
     res.status(500).json({ message: "Server error" });
+  }
+});
+router.delete("/:id", tokenValidation, async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const user = await userModel.findOne({ email: req.user.email });
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const urlIndex = user.urls.findIndex((u) => String(u._id) === id);
+    if(urlIndex === -1){
+      return res.status(404).send("Url not found");
+    }
+    const shortUrl = user.urls[urlIndex].shortUrl;
+    await urlModel.findOneAndDelete({shortUrl});
+
+    if (urlIndex === -1) {
+      return res.status(404).send("URL not found");
+    }
+
+    user.urls.splice(urlIndex, 1);
+
+    await user.save();
+
+    res.status(200).json({ message: "URL successfully deleted" });
+
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Server error");
   }
 });
 

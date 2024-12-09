@@ -28,6 +28,9 @@ const qrSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    title: {
+        type: String
+    }
 })
 const userSchema = new mongoose.Schema({
     uname: {

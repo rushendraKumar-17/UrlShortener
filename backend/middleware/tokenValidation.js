@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 const SECRET = "@rushendra17";
-const tokenValidation = (req,res,next)=>{
+import userModel from "../models/userModel.js";
+const tokenValidation = async(req,res,next)=>{
     const authHeader = req.headers['authorization']; 
       if (!authHeader) {
          return res.status(401).json({ message: "Authorization header missing" });
@@ -13,7 +14,10 @@ const tokenValidation = (req,res,next)=>{
         }
         try{
             const decoded = jwt.verify(token,SECRET);
-            req.user = decoded;
+            const user =await userModel.findOne({email:decoded.email});
+            console.log(decoded);
+            console.log("User",user);
+            req.user = user;
         }
         catch(e){
             console.log(e);
