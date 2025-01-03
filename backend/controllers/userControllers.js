@@ -45,7 +45,7 @@ export const signin = async (req, res) => {
             password
         }
         const token = jwt.sign(payload,SECRET,{expiresIn:"100d"});
-        res.status(200).json({token});
+        res.status(200).json({token,user:{name:user.uname,email}});
       } else {
         res.status(400).send("Invalid credentials");
       }
@@ -54,14 +54,18 @@ export const signin = async (req, res) => {
 };
 
 export const verifyToken = async(req,res)=>{
-  const token = req.headers.authorization.split(' ')[1];
+
+  const token = req.headers?.authorization?.split(' ')[1];
+  if(token){
   const decoded = jwt.verify(token,SECRET);
   const {email,password} = decoded;
   const userExists = await userModel.findOne({email});
   if(userExists && userExists.password === password){
-    res.status(200).json(userExists);
+    res.status(200).json({name:userExists.uname,email});
   }else{
     res.status(401).send("Invalid Credentials");
   }
-
+  }else{
+    res.status(400).json({message:"No token found"});
+  }
 }

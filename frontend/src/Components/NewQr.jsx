@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import {
   Box,
@@ -8,9 +8,11 @@ import {
   Paper,
   Stack,
 } from "@mui/material";
+import AppContext from "../Context/context";
 
 const NewQr = () => {
   const [url, setUrl] = useState("");
+  const {apiUrl,setMessage,setOpen,setAlertType} = useContext(AppContext);
   const [qrCodeImage, setQrCodeImage] = useState("");
   const token = localStorage.getItem("token");
   const [title,setTitle] = useState("");
@@ -19,7 +21,7 @@ const NewQr = () => {
       try {
         axios
           .post(
-            "https://urlshortener-p7ma.onrender.com/api/qr",
+            `${apiUrl}/api/qr`,
             { url,title },
             {
               headers: {
@@ -30,9 +32,15 @@ const NewQr = () => {
           )
           .then((res) => {
             console.log(res);
+            setAlertType('success');
+            setMessage(e.response.data.message);
+            setOpen(true);
             setQrCodeImage(res.data);
           })
           .catch((e) => {
+            setAlertType('error');
+            setMessage(e.response.data.message);
+            setOpen(true);
             console.log(e);
           });
       } catch (error) {

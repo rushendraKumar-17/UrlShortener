@@ -20,7 +20,7 @@ router.post("/", tokenValidation, async (req, res) => {
     const urlExist = user.urls.find((u) => u.targetUrl === url);
     if (urlExist) {
       return res
-        .status(409)
+        .status(400)
         .json({ message: "This URL already has a short URL" });
     }
 
@@ -35,7 +35,7 @@ router.post("/", tokenValidation, async (req, res) => {
     urlModel.create({ shortUrl, targetUrl: url ,title,owner:user._id});
     await user.save();
 
-    res.status(200).json({ shortUrl:`https://urlshortener-p7ma.onrender.com/${shortUrl}` });
+    res.status(200).json({ shortUrl });
   } catch (error) {
     console.error("Error creating short URL:", error);
     res.status(500).json({ message: "Server error" });

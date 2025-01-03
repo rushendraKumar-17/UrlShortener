@@ -14,11 +14,11 @@ import DownloadIcon from "@mui/icons-material/Download";
 import AppContext from "../Context/context.jsx";
 const Qrcodes = () => {
   const [qrs,setQrs] = useState();
-  const {logged} = useContext(AppContext);
+  const {logged,apiUrl} = useContext(AppContext);
   const token = localStorage.getItem("token");
   useEffect(()=>{
-    if(!logged) return;
-    axios.get("https://urlshortener-p7ma.onrender.com/api/qr",{
+    // if(!logged) return;
+    axios.get(`${apiUrl}/api/qr`,{
       headers:{
         Authorization:`Bearer ${token}`
       }
@@ -37,7 +37,9 @@ const Qrcodes = () => {
     <>
       {logged ? (
     <Grid container spacing={2}>
-    {qrs && qrs.map((qr) => (
+    {qrs && ( qrs.length === 0 ? (
+      <h1 style={{textAlign:"center",marginTop:"5vh"}}>No QR available </h1>
+    ) :(qrs.map((qr) => (
       <Grid item xs={12} sm={6} md={4} key={qr._id} style={{marginTop:"5vh"}}>
         <Card sx={{ maxWidth: 345 }} style={{padding:"10vh 8vh 0vh 8vh",position:"relative"}}>
           <CardMedia
@@ -73,9 +75,11 @@ const Qrcodes = () => {
               Download
             </Button> */}
             
+            
           </CardContent>
         </Card>
       </Grid>
+    ))
     ))}
   </Grid>):(
       <Box

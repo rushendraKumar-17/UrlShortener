@@ -51,6 +51,6 @@ app.get("/:shortUrl", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-app.listen(port,()=>{
+app.listen(port,'0.0.0.0',()=>{
     console.log("Server running at port "+port);
 })

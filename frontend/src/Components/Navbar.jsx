@@ -16,14 +16,17 @@ import AppContext from '../Context/context';
 const Navbar = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const { user } = useContext(AppContext);
-
+  const {setLogged,setUser,user,logged} = useContext(AppContext);
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  // console.log(user);
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login');
+    handleMenuClose();
+    setUser(null);
+    setLogged(false);
+    navigate('/home');
   }
   const handleMenuClose = () => {
     setAnchorEl(null);
@@ -38,7 +41,7 @@ const Navbar = () => {
         </Typography>
 
         {/* Profile Section */}
-        {user ? (
+        {logged ? (
           <Box>
             <IconButton onClick={handleMenuOpen} color="inherit">
               <Avatar alt="Profile" />
@@ -59,7 +62,7 @@ const Navbar = () => {
             >
               {/* Display User's uname and email */}
               <Typography sx={{ padding: '8px 16px' }}>
-                <strong>{user.uname}</strong>
+                <strong>{user.name}</strong>
               </Typography>
               <Typography sx={{ padding: '0 16px' }}>{user.email}</Typography>
               <MenuItem onClick={handleLogout} style={{ color: 'red' ,textAlign:"center"}}>Logout</MenuItem>

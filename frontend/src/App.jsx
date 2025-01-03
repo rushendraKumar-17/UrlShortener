@@ -6,42 +6,34 @@ import Signup from "./Components/Signup.jsx";
 import Home from "./Components/Home.jsx";
 import AppContext from "./Context/context.jsx";
 import Navbar from "./Components/Navbar.jsx";
+import { Snackbar } from "@mui/material";
+import { Button } from "@mui/material";
+import { Alert } from "@mui/material";
 function App() {
   const navigate = useNavigate();
-  const { setUser ,setLogged} = useContext(AppContext);
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      axios
-        .get("https://urlshortener-p7ma.onrender.com/api/users", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            setUser(res.data);
-            setLogged(true);
-          } 
-          navigate("/home");
-        })
-        .catch(() => {
-          navigate("/login");
-        });
-    } else {
-      navigate("/home");
-    }
-  }, []);
+
+  const { open, handleClose, alertType, setAlertType, message } =
+    useContext(AppContext);
 
   return (
     <>
-    <Navbar />
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/home/*" element={<Home />} /> {/* Nested routes */}
-      
-    </Routes>
+      <Navbar />
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      sx={{ mt: '8vh' }}
+      >
+        <div>
+        <Alert onClose={handleClose} severity={alertType} sx={{ width: '100%' }}>
+          {message}
+        </Alert>
+        </div>
+      </Snackbar>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/home/*" element={<Home />} /> {/* Nested routes */}
+        <Route path="/" element={<Home />} />
+      </Routes>
     </>
   );
 }

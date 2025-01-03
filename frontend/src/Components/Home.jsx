@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "./Sidebar";
@@ -8,16 +8,17 @@ import Qrcodes from "./Qrcodes";
 import Landing from "./Landing.jsx";
 import NewComponent from "./NewComponent.jsx";
 import NewQr from "./NewQr.jsx";
+import AppContext from "../Context/context.jsx";
 const Home = () => {
   const [baseUrl, setBaseUrl] = useState("");
   const token = localStorage.getItem("token");
 
-
+  const {apiUrl} = useContext(AppContext);
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
       .post(
-        "https://urlshortener-p7ma.onrender.com/api/url",
+        `${apiUrl}/api/url`,
         { url: baseUrl },
         {
           headers: {
@@ -44,15 +45,6 @@ const Home = () => {
           <Route path="urls" element={<Allurls />} />
           <Route path="qrcodes" element={<Qrcodes />} />
         </Routes>
-        {/* <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="baseUrl"
-            id="baseUrl"
-            onChange={(e) => setBaseUrl(e.target.value)}
-          />
-          <button type="submit">Submit</button>
-        </form> */}
     </div>
   );
 };

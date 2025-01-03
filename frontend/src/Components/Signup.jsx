@@ -1,32 +1,38 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate ,Link} from "react-router-dom";
 import axios from "axios";
 import { Container, TextField, Button, Typography, Box } from "@mui/material";
+import AppContext from "../Context/context";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-
+  const {apiUrl} = useContext(AppContext);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (email && password && name) {
       axios
-        .post("https://urlshortener-p7ma.onrender.com/api/users/signup", {
+        .post(`${apiUrl}/api/users/signup`, {
           uname: name,
           email,
           password,
         })
         .then((res) => {
           if (res.status === 201) {
+            alert("Registration successful");
             navigate("/login");
           } else {
+            alert(res.response.data.message);
             console.log(res);
           }
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          alert(e.response.data.message);
+          console.log(e);
+    });
     }
   };
 

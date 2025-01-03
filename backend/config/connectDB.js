@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const connectDB = () => {
-    mongoose.connect("mongodb+srv://rushi17092004:rushi123@cluster0.4bc8xaq.mongodb.net/UrlShortener").then(()=>{
+    mongoose.connect("mongodb://localhost:27017/UrlShortener").then(()=>{
         console.log("Connected to database");
     }).catch(e => console.log(e))
 }
